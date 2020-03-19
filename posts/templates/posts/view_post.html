@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+  {% block override_background %}
+    <div class="background-color">
+    {% endblock %}
+
+{% block body %}
+
+    <article class="bg-light rounded">
+                <div class="row">
+                    <div class="ml-3 mt-1">
+                <img class= ' rounded-circle article-img border border-dark mx-1 my-1' src="{{ post.author.userprofil.profil_image.url }}">
+                <a href="{% url 'users:user_profile' post.author.id %}">{{ post.author }}</a>
+                    </div>
+                    {% if user.id != post.author.id %}
+                    <div class="dropdown show ml-auto mt-2 mr-4">
+                          <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Definições
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'posts:ocultar_post' post.id %}">Ocultar</a>
+                            <a class="dropdown-item" href="{% url 'posts:send_post_report' post.id %}">Denunciar</a>
+                          </div>
+                    </div>
+                    {% else %}
+                        <div class=" ml-auto mt-2 mr-4">
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'posts:delete_post' post.id %}">Apagar</a><br>
+                        </div>
+                    {% endif %}
+                </div>
+                <hr>
+                {{ post.content }}<br>
+                <div >
+                    {% for postimage in post.postimage_set.all %}
+                        <img class= ' article-img border border-dark mt-4 ml-2' src="{{ postimage.image.url }}">
+                    {% endfor %}
+                </div><br>
+                <hr>
+                    <div class="row pl-3">
+                    <p>{{ n_likes }} Like{{ n_likes|pluralize }}</p>
+                    <form method="post">
+                    {% csrf_token %}
+                    {% if user_has_like %}
+                        <input type="submit" name="like" class="btn btn-outline-primary mx-1 my-2 active" value="Like">
+                    {% else %}
+                        <input type="submit" name="like" class="btn btn-outline-primary mx-1 my-2" value="Like">
+                    {% endif %}
+                    </form>
+                    <div class="row ml-auto pr-5">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                            {{ field }}
+                            {% endfor %}
+                            <input name="comentar" class="btn btn-outline-primary" type="submit" value="Comentar">
+                        </form>
+                    </div>
+                    </div>
+                            <div >
+                <small>{{ post.date }}</small>
+                </div>
+        <h1>Comentários</h1>
+        <p class="ml-2">{{ n_comments }} Comentário{{ n_comments|pluralize }}</p>
+        <div class="pb-1">
+        <hr>
+        {% for comment in comments %}
+            <article  class="col-md-6 cols" >
+            <a href="{% url 'users:user_profile' comment.author.id %}">{{ comment.author }}</a><br>
+            {{ comment.comment }}<br>
+            <div class="row">
+            <small class="mt-2"> {{ comment.date }} </small>
+                {% if comment.author.id == user.id or comment.post.author.id == user.id%}
+                    <a class='ml-auto mr-2' style="color: #dc3545" href="{% url 'posts:delete_comment' post.id comment.id %}">Apagar</a>
+                {% endif %}
+            </div>
+            <hr>
+            </article>
+        {% endfor %}
+        </div>
+    </article>
+{% endblock %}

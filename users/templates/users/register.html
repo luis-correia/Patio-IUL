@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+    <div class="vertical-center">
+    <div class="wrap-login bg-light border border-dark ">
+        <span class="login-title pb-5">
+            <h1>Registar</h1>
+        </span>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="text-center">
+        <input class="btn btn-primary mb-2" type="submit" value="Registar">
+        </div>
+    </form>
+    <p>Já tem conta?<a href="{% url "users:login" %}"> Login</a></p>
+    </div>
+    </div>
+{% endblock %}

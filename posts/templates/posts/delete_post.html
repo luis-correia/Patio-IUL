@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+  {% block override_background %}
+    <div class="background-color">
+    {% endblock %}
+
+{% block body %}
+    <h1>Tem a certeza que quer apagar a publicação?</h1>
+    <form method="post">
+    {% csrf_token %}
+    <input type='submit' name='opcao' value="Sim">  <input type="submit" name='opcao' value="Não">
+    </form>
+{% endblock %}

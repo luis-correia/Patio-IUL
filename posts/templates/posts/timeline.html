@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+  {% block override_background %}
+    <div class="background-color">
+    {% endblock %}
+
+{% block body %}
+        <span class="login-title pb-5">
+            <h1>Publicações</h1>
+        </span>
+    <div class="  mb-5 ">
+        <form id="post_form" method="post" action="" enctype="multipart/form-data">
+            <div class="mx-auto">
+                {% csrf_token %}
+                {% for field in form_content %}
+                    {{ field }}
+                {% endfor %}
+            </div>
+            <div>
+                <div class="row">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle ml-3 mb-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Adicionar Imagens
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {{ form_image.management_form }}
+                            {% for form in form_image %}
+                                <div class="dropdown-item">{{ form }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <input class='btn btn-secondary ml-5 mb-2' type="submit" value="Publicar">
+                </div>
+            </div>
+        </form>
+    </div>
+    {% for post in posts %}
+
+            <article class="content-section bg-light rounded border border-dark"  onclick="location.href='{% url 'posts:view_post' post.id %}';" style="cursor: pointer;">
+                <img class= ' rounded-circle article-img border border-dark mx-1 my-1' src="{{ post.author.userprofil.profil_image.url }}">
+                <a href="{% url 'users:user_profile' post.author.id %}">{{ post.author.username }}</a><br>
+                <hr>
+                {{ post.content }}<br>
+                <div >
+                    {% for postimage in post.postimage_set.all %}
+                        <img class= ' article-img border border-dark mt-4 ' src="{{ postimage.image.url }}">
+                    {% endfor %}
+                </div><br>
+                <hr>
+                    <div class="row pl-3">
+                        <p>{{ post.postlikes_set.count }} Like{{ post.postlikes_set.count|pluralize }}</p>
+                        <p class="ml-3">{{ post.postcomment_set.count }} Comentário{{ post.postcomment_set.count|pluralize }}</p>
+                    </div>
+                            <div>
+                <small>{{ post.date }}</small>
+                </div>
+            </article>
+    {% endfor %}
+{% endblock %}

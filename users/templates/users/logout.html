@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block body %}
+     <div class="vertical-center">
+    <div class="wrap-login bg-light border border-dark ">
+    <span class="login-title pb-2">
+            <h1>Logout</h1>
+        </span>
+        <div class="text-center mb-5">
+         <p>Obrigado e volte sempre</p>
+        </div>
+    <p><a href="{% url 'users:login' %}">Ir para login</a></p>
+    </div>
+     </div>
+{% endblock %}

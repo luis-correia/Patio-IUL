@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block override_background %}
+    <div class="background-color">
+    {% endblock %}
+
+    {% block body %}
+        <div class="bg-light rounded border border-dark">
+        <div class="ml-2">
+        <h1 >
+                <span class="login-title pd-2">
+        <h1>Todos os utilizadores</h1>
+    </span>
+        </h1>
+        </div>
+        <hr>
+        {% for user in users %}
+            <div class="row pl-4">
+                 <img class= ' rounded-circle article-img border border-dark mx-1 my-1' src="{{ user.userprofil.profil_image.url }}">
+                 <a href="{% url 'users:user_profile' user.id %}">{{ user.username }}</a>
+            </div>
+            <hr>
+        {% endfor %}
+        </div>
+    {% endblock %}

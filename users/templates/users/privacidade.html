@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block override_background %}
+    <div class="background-color">
+    {% endblock %}
+
+    {% block body %}
+        <div class="bg-light rounded border border-dark">
+        <div >
+            <span class="login-title py-2">
+        <h1>Privacidade</h1>
+    </span>
+        </div>
+        <div class="my-4 ">
+        <nav >
+          <div class="nav nav-tabs " id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-pub_ocultadas-tab" data-toggle="tab" href="#nav-pub_ocultadas" role="tab" aria-controls="nav-pub_ocultadas" aria-selected="true">Publicações Ocultadas</a>
+            <a class="nav-item nav-link" id="nav-users_ocultados-tab" data-toggle="tab" href="#nav-users_ocultados" role="tab" aria-controls="nav-users_ocultados" aria-selected="false">Utilizadores Ocultados</a>
+            <a class="nav-item nav-link" id="nav-users_bloqueados-tab" data-toggle="tab" href="#nav-users_bloqueados" role="tab" aria-controls="nav-users_bloqueados" aria-selected="false">Utilizadores Bloqueados</a>
+          </div>
+        </nav>
+        <div class="tab-content " id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-pub_ocultadas" role="tabpanel" aria-labelledby="nav-pub_ocultadas-tab">
+              {% for hided in posts_hided %}
+                  <article class=" border border-dark bg-light pd-2 my-1 mx-3 rounded" style="overflow: scroll">
+                      <div class="row">
+                      <img class= ' rounded-circle article-img border border-dark ml-4 my-1' src="{{ hided.post.author.userprofil.profil_image.url }}">
+                    <a href="{% url 'users:user_profile' hided.post.author.id %}">{{ hided.post.author }}</a><br>
+                   <div class="ml-auto mt-2 mr-4">
+                    <a class='btn btn-sm btn-secondary 'href="{% url 'users:tirar_post_ocultado' hided.post.id %}">Tirar da Lista</a>
+                   </div>
+                      </div>
+                <hr>
+                {{ hided.post.content }}<br>
+                <div >
+                    {% for postimage in hided.post.postimage_set.all %}
+                        <img class= ' article-img border border-dark mx-1 my-1' src="{{ postimage.image.url }}">
+                    {% endfor %}
+                </div><br>
+                <hr>
+                    <div class="row pl-3">
+                        <p>{{ hided.post.postlikes_set.count }} Like{{ hided.post.postlikes_set.count|pluralize }}</p>
+                        <p class="ml-3">{{ hided.post.postcomment_set.count }} Comentário{{ hided.post.postcomment_set.count|pluralize }}</p>
+                    </div>
+                      <div>
+                          <small>{{ hided.post.date }}</small>
+                </div>
+            </article>
+              {% endfor %}
+          </div>
+            <div class="tab-pane fade show " id="nav-users_ocultados" role="tabpanel" aria-labelledby="nav-users_ocultados-tab">
+                {% for user in users_hided %}
+                    <div class="row pl-4">
+                 <img class= ' rounded-circle article-img border border-dark mx-1 my-1' src="{{ user.userprofil.profil_image.url }}">
+                 <a href="{% url 'users:user_profile' user.id %}">{{ user.username }}</a>
+                     <div class="ml-auto mt-2 mr-4">
+                        <a class='btn btn-sm btn-secondary 'href="{% url 'users:tirar_user_ocultado' user.id %}">Tirar da Lista</a>
+                        </div>
+            </div>
+            <hr>
+                {% endfor %}
+          </div>
+            <div class="tab-pane fade show " id="nav-users_bloqueados" role="tabpanel" aria-labelledby="nav-users_bloqueados-tab">
+                {% for user in users_blocked %}
+                    <div class="row pl-4">
+                        <img class= ' rounded-circle article-img border border-dark mx-1 my-1' src="{{ user.userprofil.profil_image.url }}">
+                        <a href="{% url 'users:user_profile' user.id %}">{{ user.username }}</a>
+                        <div class="ml-auto mt-2 mr-4">
+                        <a class='btn btn-sm btn-secondary 'href="{% url 'users:tirar_user_bloqueado' user.id %}">Tirar da Lista</a>
+                        </div>
+                    </div>
+            <hr>
+                {% endfor %}
+          </div>
+        </div>
+          </div>
+    {% endblock %}

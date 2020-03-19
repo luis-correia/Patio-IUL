@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+  {% block override_background %}
+    <div class="background-color">
+    {% endblock %}
+
+{% block body %}
+    <div class="bg-light rounded border border-dark" >
+    <div class="row">
+        <img class=" rounded-circle account-img border border-dark ml-4 my-3" src="{{ user.userprofil.profil_image.url }}">
+        <h1 class="mt-5">{{ user.username }}</h1>
+    </div>
+    <div class="ml-5 pl-5">
+         <strong class="pl-5 m-2">Nome: </strong>{{ user.first_name }} {{ user.last_name }}<br>
+        {% if user.userprofil.curso %}
+        <strong class="pl-5 m-2">Curso: </strong>{{ user.userprofil.curso }}<br>
+        {% endif %}
+        {% if user.userprofil.n_matriculas %}
+        <strong class="pl-5 m-2">Nº matriculas: </strong>{{ user.userprofil.n_matriculas }}<br>
+        {% endif %}
+        {% if user.userprofil.instagram %}
+        <strong class="pl-5 m-2">Instagram: </strong>{{ user.userprofil.instagram }}<br>
+        {% endif %}
+        {% if user.userprofil.facebook %}
+        <strong class="pl-5 m-2">Facebook: </strong>{{ user.userprofil.facebook }}<br>
+        {% endif %}
+        {% if user.userprofil.twitter %}
+        <strong class="pl-5 m-2">Twitter: </strong>{{ user.userprofil.twitter }}<br>
+        {% endif %}
+        {% if user.userprofil.description %}
+        <strong class="pl-5 m-2">Descrição: </strong>{{ user.userprofil.description }}<br>
+        {% endif %}
+    </div>
+        <a class='ml-1' href="{% url 'users:edit_profile' %}">Editar Perfil</a>
+
+<div class="my-4 ">
+<nav >
+  <div class="nav nav-tabs " id="nav-tab" role="tablist">
+    <a class="nav-item nav-link active" id="nav-publicaçoes-tab" data-toggle="tab" href="#nav-publicaçoes" role="tab" aria-controls="nav-publicaçoes" aria-selected="true">Publicações</a>
+    <a class="nav-item nav-link" id="nav-comentarios-tab" data-toggle="tab" href="#nav-comentarios" role="tab" aria-controls="nav-comentarios" aria-selected="false">Comentários</a>
+    <a class="nav-item nav-link" id="nav-likes-tab" data-toggle="tab" href="#nav-likes" role="tab" aria-controls="nav-likes" aria-selected="false">Likes</a>
+  </div>
+</nav>
+<div class="tab-content " id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-publicaçoes" role="tabpanel" aria-labelledby="nav-publicaçoes-tab">
+  <div>
+    <form id="post_form" method="post" action="" enctype="multipart/form-data">
+            <div >
+                {% csrf_token %}
+                {% for field in form_content %}
+                    {{ field }}
+                {% endfor %}
+            </div>
+            <div>
+                <div class="row ml-5">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Adicionar Imagens
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {{ form_image.management_form }}
+                            {% for form in form_image %}
+                                <div class="dropdown-item">{{ form }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <input class='btn btn-primary ml-5' type="submit" value="Publicar">
+                </div>
+            </div>
+        </form>
+  </div>
+    {% for post in posts %}
+            <article class=" border border-dark bg-light pd-2 my-1 mx-3 rounded" style="overflow: auto" onclick="location.href='{% url 'posts:view_post' post.id %}';" style="cursor: pointer;">
+                <div class="row">
+                <img class= ' rounded-circle article-img border border-dark ml-4 my-1' src="{{ post.author.userprofil.profil_image.url }}">
+                <a href="{% url 'users:user_profile' post.author.id %}">{{ post.author }}</a><br>
+                </div>
+                <hr>
+                {{ post.content }}<br>
+                <div >
+                    {% for postimage in post.postimage_set.all %}
+                        <img class= ' article-img border border-dark mx-1 my-1' src="{{ postimage.image.url }}">
+                    {% endfor %}
+                </div><br>
+                <hr>
+                <div>
+                {{ post.date }}<br>
+                </div>
+                    <div class="row pl-3">
+                        <p>{{ post.postlikes_set.count }} Like{{ post.postlikes_set.count|pluralize }}</p>
+                        <p class="ml-3">{{ post.postcomment_set.count }} Comentário{{ post.postcomment_set.count|pluralize }}</p>
+                    </div>
+            </article>
+    {% endfor %}
+  </div>
+  <div class="tab-pane fade" id="nav-comentarios" role="tabpanel" aria-labelledby="nav-comentarios-tab">
+      {% for comment in comments %}
+            <article  class="col-md-6 cols" style="overflow: auto">
+            <div class="row">
+            <a href="{% url 'users:user_profile' comment.author.id %}">{{ comment.author }}</a><br>
+            <a class='ml-auto mr-2' href="{% url 'posts:view_post' comment.post.id %}">Ver Post</a>
+            </div>
+            {{ comment.comment }}<br>
+            <div class="row">
+            <span class="ml-1">{{ comment.date }}</span>
+                <a class='ml-auto mr-2' style="color: #dc3545" href="{% url 'posts:delete_comment' comment.post.id comment.id %}">Apagar</a>
+            </div>
+            <hr>
+            </article>
+        {% endfor %}
+  </div>
+  <div class="tab-pane fade" id="nav-likes" role="tabpanel" aria-labelledby="nav-likes-tab">
+         {% for like in likes %}
+            <article class=" border border-dark bg-light pd-2 my-1 mx-3 rounded" style="overflow: auto" onclick="location.href='{% url 'posts:view_post' like.post.id %}';" style="cursor: pointer;">
+                <img class= ' rounded-circle article-img border border-dark mx-1 my-1' src="{{ like.post.author.userprofil.profil_image.url }}">
+                <a href="{% url 'users:user_profile' like.post.author.id %}">{{ like.post.author }}</a><br>
+                <hr>
+                {{ like.post.content }}<br>
+                <div >
+                    {% for postimage in like.post.postimage_set.all %}
+                        <img src="{{ postimage.image.url }}">
+                    {% endfor %}
+                </div><br>
+                <hr>
+                <div>
+                {{ like.post.date }}
+                </div>
+                    <div class="row pl-3">
+                        <p>{{ like.post.postlikes_set.count }} Like{{ like.post.postlikes_set.count|pluralize }}</p>
+                        <p class="ml-3">{{ like.post.postcomment_set.count }} Comentário{{ like.post.postcomment_set.count|pluralize }}</p>
+                    </div>
+            </article>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}
