@@ -7,7 +7,7 @@ You will need to install:
 	
 If you want the recovery password feature to work you have to go to settings.py and change:
 	
-		-EMAIL_HOST_USER = "GMAIL ACCOUNT"
-		-EMAIL_HOST_PASSWORD = "PASSWORD"
+		-EMAIL_HOST_USER = "YOUR GMAIL ACCOUNT"
+		-EMAIL_HOST_PASSWORD = "YOUR PASSWORD"
 	
 Also, you will need to allow your Gmail account to be accessed by less secure apps.
