@@ -1,7 +1,7 @@
 You will need to install:
 	
 	    -Django: pip install django
-	    -Pillow: pip install pillow; Also in settings.py in the INSTALLED_APPS add: "crispy_forms"
+	    -Pillow: pip install pillow
 	    -Crispy-Forms: pip install django-crispy-forms
 	
 	
